@@ -61,11 +61,12 @@ function gameStart() {
 //when correct key is pressed, character appears in word
 function keyboard(event) {
     var keyPress = event.key;
+    console.log("here is event.key: ", event.key); //checks if key presses are registered in console
     lettersRemaining = answer.length;
 
     if (secondsLeft > 0 && timerActive == true) {
         for (var i = 0; i < answer.length; i++) {
-            var letter = document.getElementById("letter-" + i);
+            var letter = document.getAttribute("data-letter");
             var state = letter.getAttribute("data-state");
             if (state === "hidden") {
                 lettersRemaining--;
