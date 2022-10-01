@@ -17,66 +17,39 @@
 //these serve as key events, where the blank "_" symbol is then replaced by the correct character
 //after every game, we use localStorage to store the win and loss count. we would display this score card after each game
 
-var wordChosen = document.querySelector("#word");
+var wordLocation = document.querySelector("#word-location");
 var timeEl = document.querySelector(".time");
 var winCount = document.querySelector("#win-count");
 var lossCount = document.querySelector("#loss-count");
 var startGameBtn = document.querySelector("#start-button");
 var resetScoreBtn = document.querySelector("#reset-score")
 
+
 var timerInterval;
 var words = ["javascript", "code", "timer", "markdown", "repository"];
-var blank = ""
-var answer = ""
+var answer;
+var lettersRemaining;
 var wins = 0;
 var losses = 0;
 var secondsLeft = 10;
 var timerActive;
 
-//when correct key is pressed, character appears in word
-document.addEventListener("keydown", function(event) {
-    if (secondsLeft > 0 && timerActive == true) {
-        var answerActive = ""
-        var keyPress = event.key.toLowerCase;
-        for (var i = 0; i < answer.length; i++) {
-            if (answer.charAt(i) == keyPress) {
-                answerActive += answer.charAt(i);
-            } else {
-                answerActive += blank.charAt(i);
-            }
-        }
-        blank = answerActive;
-        wordChosen.textContent = answerActive;
-        
-        clearInterval(timerInterval);
-        winIncrease();
-    }
-});
-
 function gameStart() {
-    //resets timer upon hitting start button
-    clearInterval(timerInterval); 
     secondsLeft = 10;
     timerActive == true;
-    blank = ""
-    var answer = words[Math.floor(Math.random() * words.length)]; //randomly selects a single word
-    for (var i = 0; i < answer.length; i++) {
-        if (Math.random() < 0.1) {
-            blank += answer.charAt(i);
-        } else {
-            blank += " _ ";
-        }
-    }
-    wordChosen.textContent = blank;
+
+    answer = words[Math.floor(Math.random() * words.length)]; //randomly selects a single word
+    wordLocation.innerHTML = "";
+    loadWord();
+
+    document.addEventListener("keydown", keyboard);
 
     timerInterval = setInterval(function() {
-        
+        secondsLeft--;
         if (secondsLeft > 1) {
             timeEl.textContent = secondsLeft + " seconds left! Don't give up!"
-            secondsLeft--;
         } else if (secondsLeft === 1) {
             timeEl.textContent = secondsLeft + " second left! Last chance!"
-            secondsLeft--;
         } else {
             timeEl.textContent = "You lose!"
             clearInterval(timerInterval); //stops timer
@@ -85,9 +58,48 @@ function gameStart() {
     }, 1000);
 }
 
+//when correct key is pressed, character appears in word
+function keyboard(event) {
+    var keyPress = event.key;
+    lettersRemaining = answer.length;
+
+    if (secondsLeft > 0 && timerActive == true) {
+        for (var i = 0; i < answer.length; i++) {
+            var letter = document.getElementById("letter-" + i);
+            var state = letter.getAttribute("data-state");
+            if (state === "hidden") {
+                lettersRemaining--;
+                letter.textContent = keyPress;
+                letterElement.setAttribute("data-state", "visible");
+            }
+        }
+        
+        if (lettersRemaining === 0) {
+            winIncrease();
+        }
+    }
+}
+
+function loadWord() {
+    var addUlElement = document.createElement("ul");
+    addUlElement.className = "word";
+    for (var i = 0; i < answer.length; i++) {
+        var addLiElement = document.createElement("li");
+        addLiElement.textContent = "_"
+        addLiElement.className = "letter";
+        addLiElement.id = "letter-" + i;
+        addLiElement.setAttribute("data-state", "hidden");
+        addLiElement.setAttribute("data-letter", answer[i]);
+        addUlElement.appendChild(addLiElement);
+    }
+    wordLocation.appendChild(addUlElement);
+}
+
 //local storage win increase
 function winIncrease() {
+    clearInterval(timerInterval);
     wins++;
+    timeEl.textContent = "You win!"
     winCount.textContent = "Wins: " + wins;
     localStorage.setItem("win-count", wins);
 }

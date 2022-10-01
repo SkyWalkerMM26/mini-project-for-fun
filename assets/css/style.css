@@ -38,3 +38,11 @@ h2 {
     justify-content: center;
     margin: 1%;
 }
+
+.word {
+    margin: 6%;
+}
+
+li {
+    display: inline;
+}
