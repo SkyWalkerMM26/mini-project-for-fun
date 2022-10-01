@@ -71,7 +71,7 @@ function keyboard(event) {
             if (state === "hidden") {
                 lettersRemaining--;
                 letter.textContent = keyPress;
-                letterElement.setAttribute("data-state", "visible");
+                letter.setAttribute("data-state", "visible");
             }
         }
         
