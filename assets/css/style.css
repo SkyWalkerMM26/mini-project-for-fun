@@ -1,0 +1,40 @@
+:root {
+    --text-color: white;
+    --button-bg-color: black;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    display: flex
+    flex-direction: row;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 200%;
+    color: var(--text-color);
+    background-image: linear-gradient(to bottom, darkblue, black);
+    background-attachment: fixed;
+    text-align: center;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+h2 {
+    margin: 5%;
+    text-align: center;
+}
+
+.card {
+    border-style: solid;
+    border-width: 1px;
+    width: 45%;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    margin: 1%;
+}
